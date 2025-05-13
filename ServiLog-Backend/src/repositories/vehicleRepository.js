@@ -12,7 +12,7 @@ exports.createVehicle = async (vehicle) => {
     }
 }
 
-exports.getVehicleById = async (id) => {
+exports.getVehiclebyId = async (id) => {
     try {
         const res = await pool.query(
             "SELECT * FROM vehicles WHERE id = $1", 
@@ -24,7 +24,7 @@ exports.getVehicleById = async (id) => {
     }
 }
 
-exports.getVehiclesByAccountId = async (userId) => {
+exports.getVehiclesbyAccountId = async (userId) => {
     try {
         const res = await pool.query(
             "SELECT * FROM vehicles WHERE owner_id = $1", 
@@ -53,6 +53,18 @@ exports.deleteVehicle = async (id) => {
         const res = await pool.query(
             "DELETE FROM vehicles WHERE id = $1 RETURNING *", 
             [id]
+        );
+        return res.rows[0];
+    } catch (error) {
+        console.error("Error executing query", error);
+    }
+}
+
+exports.updateVehicleStatus = async (id, status) => {
+    try {
+        const res = await pool.query(
+            "UPDATE vehicles SET status = $1, updated_at = $2 WHERE id = $3 RETURNING *", 
+            [status, new Date(), id]
         );
         return res.rows[0];
     } catch (error) {

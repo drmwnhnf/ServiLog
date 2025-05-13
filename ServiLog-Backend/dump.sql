@@ -40,6 +40,7 @@ CREATE TABLE mileages (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     vehicle_id UUID REFERENCES vehicles(id) ON DELETE CASCADE,
     mileage INT NOT NULL,
+    date DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

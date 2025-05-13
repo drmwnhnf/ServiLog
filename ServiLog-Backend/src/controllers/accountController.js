@@ -2,8 +2,8 @@ const jwt = require("jsonwebtoken");
 const accountRepository = require("../repositories/accountRepository");
 const baseResponse = require("../utils/baseResponse");
 const hasher = require("../utils/hasher");
-const { verificationMailer } = require("../utils/mailer");
 const { jwtKey } = require("../configs/env");
+const { sendVerificationEmail } = require("../services/accountServices");
 
 exports.register = async (req, res) => {
     const { name, email, password } = req.body;
@@ -33,8 +33,9 @@ exports.register = async (req, res) => {
         };
 
         const account = await accountRepository.register(accountObject);
-        if (account) {
-            verificationMailer(account.email, account.id, account.name)
+        const isVerificationEmailSent = await sendVerificationEmail(account.email, account.id, account.name);
+
+        if (!!account && isVerificationEmailSent) {
             baseResponse(res, true, 201, "Account created", null);
         } else {
             baseResponse(res, false, 400, "Account not created", null);

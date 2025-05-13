@@ -42,11 +42,11 @@ exports.createVehicle = async (req, res) => {
     }
 }
 
-exports.getVehicleById = async (req, res) => {
+exports.getVehiclebyId = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const vehicle = await vehicleRepository.getVehicleById(id);
+        const vehicle = await vehicleRepository.getVehiclebyId(id);
         if (!!vehicle) {
             return baseResponse(res, true, 200, "Vehicle found", vehicle);
         } else {
@@ -57,11 +57,11 @@ exports.getVehicleById = async (req, res) => {
     }
 }
 
-exports.getVehiclesByAccountId = async (req, res) => {
+exports.getVehiclesbyAccountId = async (req, res) => {
     const { accountId } = req.params;
 
     try {
-        const vehicles = await vehicleRepository.getVehiclesByAccountId(accountId);
+        const vehicles = await vehicleRepository.getVehiclesbyAccountId(accountId);
         if (vehicles.length > 0) {
             return baseResponse(res, true, 200, "Vehicles found", vehicles);
         } else {

@@ -7,6 +7,8 @@ const requestLogger = require('./src/middlewares/requestLogger');
 const logger = require('./src/utils/logger');
 const accountRoutes = require('./src/routes/accountRoutes');
 const vehicleRoutes = require('./src/routes/vehicleRoutes');
+const partRoutes = require('./src/routes/partRoutes');
+const mileageRoutes = require('./src/routes/mileageRoutes');
 
 const app = express();
 const options = {
@@ -22,6 +24,8 @@ app.use(requestLogger);
 
 app.use('/account', accountRoutes);
 app.use('/vehicle', vehicleRoutes);
+app.use('/part', partRoutes);
+app.use('/mileage', mileageRoutes);
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
