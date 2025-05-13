@@ -1,11 +1,9 @@
 const { Pool } = require('pg');
 const logger = require('../utils/logger');
-const dotenv = require('dotenv');
-
-dotenv.config();
+const { dbUrl } = require('./env');
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: dbUrl,
 });
 
 async function databaseConnectionTest() {
