@@ -15,7 +15,7 @@ exports.getMileagebyId = async (id) => {
 exports.getMileagesbyVehicleId = async (vehicleId) => {
     try {
         const res = await pool.query(
-            "SELECT * FROM mileages WHERE vehicle_id = $1 SORT BY date DESC", 
+            "SELECT * FROM mileages WHERE vehicle_id = $1 ORDER BY mileage DESC", 
             [vehicleId]
         );
         return res.rows;
@@ -40,8 +40,8 @@ exports.createMileage = async (vehicleId, mileage) => {
 exports.updateMileage = async (id, mileage) => {
     try {
         const res = await pool.query(
-            "UPDATE mileages SET mileage = $1, date = $2, updated_at = $3 WHERE id = $4 RETURNING *", 
-            [mileage.mileage, mileage.date, new Date(), id]
+            "UPDATE mileages SET mileage = $1, updated_at = $2 WHERE id = $3 RETURNING *", 
+            [mileage, new Date(), id]
         );
         return res.rows[0];
     } catch (error) {

@@ -1,6 +1,7 @@
 const vehicleRepository = require('../repositories/vehicleRepository');
 const partRepository = require('../repositories/partRepository');
 const mileageRepository = require('../repositories/mileageRepository');
+const accountRepository = require('../repositories/accountRepository');
 const { sendEmail } = require('../utils/mailer');
 const logger = require('../utils/logger');
 
@@ -8,20 +9,21 @@ const predictVehicleMileage = async (vehicleId, days) => {
     try {
         const mileages = await mileageRepository.getMileagesbyVehicleId(vehicleId);
 
-        if (mileages.length < 2) {
+        if (mileages.length == 0) {
             return 0;
         }
 
-        let totalMileage = 0;
-        for (const m of mileages) {
-            totalMileage += m.mileage;
-        }
+        const totalMileageChange = mileages[0].mileage - mileages[mileages.length - 1].mileage;
 
         const latestDate = mileages[0].date;
         const earliestDate = mileages[mileages.length - 1].date;
         const dayDiff = Math.floor((latestDate - earliestDate) / (1000 * 60 * 60 * 24));
 
-        return mileages[0].mileage + Math.floor((totalMileage / dayDiff) * days);
+        if (dayDiff == 0) {
+            return mileages[0].mileage;
+        }
+
+        return mileages[0].mileage + Math.floor((totalMileageChange / dayDiff) * days);
 
     } catch (error) {
         logger.error('Error predicting vehicle mileage:', error);
@@ -32,38 +34,45 @@ const predictVehicleMileage = async (vehicleId, days) => {
 const checkAllPartStatus = async (vehicleId) => {
     const parts = await partRepository.getPartsbyVehicleId(vehicleId);
 
+    if (parts.length == 0) {
+        return true;
+    }
+
     let isAllEmailSent = true;
     for (const part of parts) {
-        isAllEmailSent = isAllEmailSent && checkPartStatus(part.id);
+        isAllEmailSent = isAllEmailSent && checkPartStatus(part.id, vehicleId);
     }
 
     return isAllEmailSent;
 }
 
-const checkPartStatus = async (id) => {
+const checkPartStatus = async (id, vehicleId) => {
     try {
         const part = await partRepository.getPartbyId(id);
         const predictedMileage = await predictVehicleMileage(vehicleId, 7);
-        const currentMileage = (await mileageRepository.getMileagesbyVehicleId(vehicleId))[0].mileage;
+        const mileages = await mileageRepository.getMileagesbyVehicleId(vehicleId);
+        const currentMileage = mileages.length > 0 ? mileages[0].mileage : 0;
 
-        if ((part.lifetime_mileage + part.installed_mileage) <= currentMileage && part.status != 'MAINTAINED/REPLACED') {
+        if ((part.lifetime_mileage + part.install_mileage) <= currentMileage && part.status != 'MAINTAINED/REPLACED') {
             const vehicle = await vehicleRepository.updateVehicleStatus(vehicleId, 'MAINTENANCE_OVERDUE');
             const updatedPart = await partRepository.updatePartStatus(part.id, 'MAINTENANCE_OVERDUE');
             const account = await accountRepository.getAccountbyId(vehicle.owner_id);
-            return await sendMaintenanceOverdueEmail(vehicle, updatedPart, account, currentMileage);
-        } else if (((part.lifetime_mileage + part.installed_mileage) - predictedMileage) <= 0 && part.status != 'MAINTAINED/REPLACED') {
+            return await sendMaintenanceOverdueEmail(vehicle, updatedPart, account, currentMileage, predictedMileage);
+        } else if (((part.lifetime_mileage + part.install_mileage) - predictedMileage) <= 0 && part.status != 'MAINTAINED/REPLACED') {
             const vehicle = await vehicleRepository.updateVehicleStatus(vehicleId, 'MAINTENANCE_DUE');
             const updatedPart = await partRepository.updatePartStatus(part.id, 'MAINTENANCE_DUE');
             const account = await accountRepository.getAccountbyId(vehicle.owner_id);
-            return await sendMaintenanceDueEmail(vehicle, updatedPart, account, currentMileage);
+            return await sendMaintenanceDueEmail(vehicle, updatedPart, account, currentMileage, predictedMileage);
         }
+
+        return true;
     } catch (error) {
         logger.error('Error checking vehicle and part status:', error);
         return false;
     }
 }
 
-const sendMaintenanceDueEmail = async (vehicle, part, account, currentMileage) => {
+const sendMaintenanceDueEmail = async (vehicle, part, account, currentMileage, predictedMileage) => {
     const subject = 'Maintenance Reminder for Your Vehicle - ServiLog';
 
     const textContent = `
@@ -76,6 +85,7 @@ const sendMaintenanceDueEmail = async (vehicle, part, account, currentMileage) =
         - Brand: ${vehicle.brand}
         - Model: ${vehicle.model}
         - Current Mileage: ${currentMileage} KM
+        - Predicted Mileage in 7 Days: ${predictedMileage} KM
 
         Part:
         - Name: ${part.name}
@@ -83,6 +93,7 @@ const sendMaintenanceDueEmail = async (vehicle, part, account, currentMileage) =
         - Model: ${part.model}
         - Installed On: ${part.install_mileage} KM
         - Lifetime: ${part.lifetime_mileage} KM
+        - Need for Maintenance: ${part.lifetime_mileage + part.install_mileage} KM
 
         Please prepare to replace this part to ensure optimal vehicle performance and safety.
 
@@ -164,7 +175,8 @@ const sendMaintenanceDueEmail = async (vehicle, part, account, currentMileage) =
                     Name: ${vehicle.name}<br>
                     Brand: ${vehicle.brand}<br>
                     Model: ${vehicle.model}<br>
-                    Current Mileage: ${currentMileage} KM
+                    Current Mileage: ${currentMileage} KM<br>
+                    Predicted Mileage in 7 Days: ${predictedMileage} KM
                 </div>
 
                 <div class="info-block">
@@ -173,7 +185,8 @@ const sendMaintenanceDueEmail = async (vehicle, part, account, currentMileage) =
                     Brand: ${part.brand}<br>
                     Model: ${part.model}<br>
                     Installed On: ${part.install_mileage} KM<br>
-                    Lifetime: ${part.lifetime_mileage} KM
+                    Lifetime: ${part.lifetime_mileage} KM<br>
+                    Need for Maintenance: ${part.lifetime_mileage + part.install_mileage} KM
                 </div>
 
                 <p>Please consider servicing or replacing this part soon to ensure optimal performance and safety.</p>
@@ -191,7 +204,7 @@ const sendMaintenanceDueEmail = async (vehicle, part, account, currentMileage) =
     return sendEmail(account.email, subject, textContent, htmlContent);
 }
 
-const sendMaintenanceOverdueEmail = async (vehicle, part, account, currentMileage) => {
+const sendMaintenanceOverdueEmail = async (vehicle, part, account, currentMileage, predictedMileage) => {
     const subject = 'Urgent Maintenance Reminder for Your Vehicle - ServiLog';
 
     const textContent = `
@@ -204,6 +217,7 @@ const sendMaintenanceOverdueEmail = async (vehicle, part, account, currentMileag
         - Brand: ${vehicle.brand}
         - Model: ${vehicle.model}
         - Current Mileage: ${currentMileage} KM
+        - Predicted Mileage in 7 Days: ${predictedMileage} KM
 
         Overdue Part:
         - Name: ${part.name}
@@ -211,6 +225,7 @@ const sendMaintenanceOverdueEmail = async (vehicle, part, account, currentMileag
         - Model: ${part.model}
         - Installed On: ${part.install_mileage} KM
         - Lifetime: ${part.lifetime_mileage} KM
+        - Need for Maintenance: ${part.lifetime_mileage + part.install_mileage} KM
 
         Please take action as soon as possible to maintain the safety and performance of your vehicle.
 
@@ -303,7 +318,8 @@ const sendMaintenanceOverdueEmail = async (vehicle, part, account, currentMileag
                     Name: ${vehicle.name}<br>
                     Brand: ${vehicle.brand}<br>
                     Model: ${vehicle.model}<br>
-                    Current Mileage: ${currentMileage} KM
+                    Current Mileage: ${currentMileage} KM<br>
+                    Predicted Mileage in 7 Days: ${predictedMileage} KM
                 </div>
 
                 <div class="info-block">
@@ -312,7 +328,8 @@ const sendMaintenanceOverdueEmail = async (vehicle, part, account, currentMileag
                     Brand: ${part.brand}<br>
                     Model: ${part.model}<br>
                     Installed On: ${part.install_mileage} KM<br>
-                    Lifetime: ${part.lifetime_mileage} KM
+                    Lifetime: ${part.lifetime_mileage} KM<br>
+                    Need for Maintenance: ${part.lifetime_mileage + part.install_mileage} KM
                 </div>
 
                 <p>Please schedule a service as soon as possible to avoid potential breakdowns or further damage.</p>

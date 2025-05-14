@@ -15,22 +15,41 @@ exports.createMileage = async (req, res) => {
     }
 
     try {
+        const currentMileages = await mileageRepository.getMileagesbyVehicleId(vehicle_id);
+
         const vehicle = await vehicleRepository.getVehiclebyId(vehicle_id);
         if (!vehicle) {
             return baseResponse(res, false, 400, "Vehicle not found", null);
         }
 
         const mileageObject = {
-            vehicle_id: vehicle_id,
             mileage: mileage,
             date: date
         };
 
-        const mileage = await mileageRepository.createMileage(mileageObject);
+        const mileageCreated = await mileageRepository.createMileage(vehicle_id, mileageObject);
+
+        if (currentMileages.length != 0) {
+            for (const m of currentMileages) {
+                console.log(m.date);
+                console.log(mileageCreated.date);
+                if (m.date.getTime() == mileageCreated.date.getTime()) {
+                    await mileageRepository.deleteMileage(mileageCreated.id);
+                    return baseResponse(res, false, 400, "Mileage data for the date is already stored", null);
+                } else if (m.mileage > mileage && m.date < mileageCreated.date) {
+                    await mileageRepository.deleteMileage(mileageCreated.id);
+                    return baseResponse(res, false, 400, "Mileage for the date cannot be less than the previous date", null);
+                } else if (m.mileage < mileage && m.date > mileageCreated.date) {
+                    await mileageRepository.deleteMileage(mileageCreated.id);
+                    return baseResponse(res, false, 400, "Mileage for the date cannot be greater than the next date", null);
+                }
+            }
+        }
+
         const isChecked = await checkAllPartStatus(vehicle_id);
 
-        if (!!mileage && isChecked) {
-            return baseResponse(res, true, 201, "Mileage created", mileage);
+        if (!!mileageCreated && isChecked) {
+            return baseResponse(res, true, 201, "Mileage created", mileageCreated);
         } else {
             return baseResponse(res, false, 400, "Mileage not created", null);
         }
@@ -79,10 +98,10 @@ exports.getMileagesbyVehicleId = async (req, res) => {
 
 exports.updateMileage = async (req, res) => {
     const { id } = req.params;
-    const { mileage, date } = req.body;
+    const { mileage } = req.body;
 
-    if (!id || !mileage || !date) {
-        return baseResponse(res, false, 400, "Missing id, mileage or date", null);
+    if (!id || !mileage) {
+        return baseResponse(res, false, 400, "Missing id or mileage", null);
     }
 
     if (mileage < 0) {
@@ -95,16 +114,20 @@ exports.updateMileage = async (req, res) => {
             return baseResponse(res, false, 404, "Mileage not found", null);
         }
 
-        const mileageObject = {
-            mileage: mileage,
-            date: date
-        };
+        const currentMileages = await mileageRepository.getMileagesbyVehicleId(checkMileage.vehicle_id);
+        for (const m of currentMileages) {
+            if (m.mileage > mileage && m.date < checkMileage.date) {
+                return baseResponse(res, false, 400, "Mileage for the date cannot be less than the previous date", null);
+            } else if (m.mileage < mileage && m.date > checkMileage.date) {
+                return baseResponse(res, false, 400, "Mileage for the date cannot be greater than the next date", null);
+            }
+        }
 
-        const mileage = await mileageRepository.updateMileage(id, mileageObject);
-        const isChecked = await checkAllPartStatus(mileage.vehicle_id);
+        const mileageUpdated = await mileageRepository.updateMileage(id, mileage);
+        const isChecked = await checkAllPartStatus(mileageUpdated.vehicle_id);
 
-        if (!!mileage && isChecked) {
-            return baseResponse(res, true, 200, "Mileage updated", mileage);
+        if (!!mileageUpdated && isChecked) {
+            return baseResponse(res, true, 200, "Mileage updated", mileageUpdated);
         } else {
             return baseResponse(res, false, 404, "Mileage not updated", null);
         }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Overdue Maintenance Alert - ServiLog</title>
+    <title>Maintenance Reminder - ServiLog</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -46,10 +46,9 @@
         }
 
         .body .info-block {
-            background-color: #fff4f4;
+            background-color: #f2f2f2;
             padding: 15px;
             border-radius: 6px;
-            border-left: 5px solid #D52B1E;
             margin-bottom: 15px;
         }
 
@@ -67,30 +66,33 @@
     <div class="email-container">
         <!-- Header -->
         <div class="header">
-            <h1>Overdue Maintenance Alert</h1>
+            <h1>Maintenance Reminder</h1>
         </div>
         <!-- Body -->
         <div class="body">
-            <p>Hello, <strong>${accountName}</strong>!</p>
-            <p>Our system has detected that one of the parts in your vehicle has exceeded its lifetime mileage limit
-                and <strong>requires immediate maintenance</strong>.</p>
+            <p>Hello, <strong>${account.name}</strong>!</p>
+            <p>Based on your driving behavior, our system estimates that one of your vehicle's parts will require
+                maintenance within the next 7 days.</p>
 
             <div class="info-block">
                 <strong>Vehicle Details:</strong><br>
                 Name: ${vehicle.name}<br>
                 Brand: ${vehicle.brand}<br>
-                Model: ${vehicle.model}
+                Model: ${vehicle.model}<br>
+                Current Mileage: ${currentMileage} KM
             </div>
 
             <div class="info-block">
-                <strong>Overdue Part Details:</strong><br>
+                <strong>Part Details:</strong><br>
                 Name: ${part.name}<br>
                 Brand: ${part.brand}<br>
-                Model: ${part.model}
+                Model: ${part.model}<br>
+                Installed On: ${part.install_mileage} KM<br>
+                Lifetime: ${part.lifetime_mileage} KM
             </div>
 
-            <p>Please schedule a service as soon as possible to avoid potential breakdowns or further damage.</p>
-            <p>Stay safe,<br>The ServiLog Team</p>
+            <p>Please consider servicing or replacing this part soon to ensure optimal performance and safety.</p>
+            <p>Stay safe and thank you for using <strong>ServiLog</strong>.</p>
         </div>
         <!-- Footer -->
         <div class="footer">
