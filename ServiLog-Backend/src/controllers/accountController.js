@@ -62,7 +62,7 @@ exports.login = async (req, res) => {
             const token = jwt.sign(
                 { id: account.id, email: account.email, name: account.name },
                 jwtKey,
-                { expiresIn: "1h" }
+                { expiresIn: "8h" }
             );
             baseResponse(res, true, 200, "Login success", { account, token });
         } else {

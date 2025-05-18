@@ -2,6 +2,7 @@ const vehicleRepository = require("../repositories/vehicleRepository");
 const partRepository = require("../repositories/partRepository");
 const { checkPartStatus } = require('../services/checkStatusServices');
 const baseResponse = require("../utils/baseResponse");
+const logger = require("../utils/logger");
 
 exports.getPartbyId = async (req, res) => {
     const { id } = req.params;
@@ -66,6 +67,8 @@ exports.createPart = async (req, res) => {
         let actualYear;
         if (!year) {
             actualYear = null;
+        } else {
+            actualYear = year;
         }
 
         const partObject = {
@@ -78,10 +81,10 @@ exports.createPart = async (req, res) => {
         };
 
         const part = await partRepository.createPart(partObject, vehicle_id);
-        const isChecked = await checkPartStatus(part.id);
+        const isChecked = await checkPartStatus(part.id, vehicle_id);
 
         if (!!part && isChecked) {
-            return baseResponse(res, true, 201, "Part created", newPart);
+            return baseResponse(res, true, 201, "Part created", part);
         } else {
             return baseResponse(res, false, 400, "Part not created", null);
         }
@@ -130,6 +133,8 @@ exports.updatePart = async (req, res) => {
         let actualYear;
         if (!year) {
             actualYear = null;
+        } else {
+            actualYear = year;
         }
 
         const partObject = {
@@ -142,7 +147,7 @@ exports.updatePart = async (req, res) => {
         };
 
         const part = await partRepository.updatePart(partObject, id);
-        const isChecked = await checkPartStatus(part.id);
+        const isChecked = await checkPartStatus(part.id, part.vehicle_id);
         
         if (!!part && isChecked) {
             return baseResponse(res, true, 200, "Part updated", part);

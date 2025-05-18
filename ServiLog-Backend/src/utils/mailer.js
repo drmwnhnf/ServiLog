@@ -1,7 +1,6 @@
 const nodemailer = require('nodemailer');
 const { emailUser, emailPass, frontendUrl } = require('../configs/env');
 const logger = require('./logger');
-const { log } = require('winston');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
