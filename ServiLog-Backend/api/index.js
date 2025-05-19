@@ -1,14 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const db = require('./src/configs/db');
-const { port, frontendUrl } = require('./src/configs/env');
-const requestLogger = require('./src/middlewares/requestLogger');
-const logger = require('./src/utils/logger');
-const accountRoutes = require('./src/routes/accountRoutes');
-const vehicleRoutes = require('./src/routes/vehicleRoutes');
-const partRoutes = require('./src/routes/partRoutes');
-const mileageRoutes = require('./src/routes/mileageRoutes');
+const db = require('../src/configs/db');
+const { port, frontendUrl } = require('../src/configs/env');
+const requestLogger = require('../src/middlewares/requestLogger');
+const logger = require('../src/utils/logger');
+const accountRoutes = require('../src/routes/accountRoutes');
+const vehicleRoutes = require('../src/routes/vehicleRoutes');
+const partRoutes = require('../src/routes/partRoutes');
+const mileageRoutes = require('../src/routes/mileageRoutes');
 
 const app = express();
 const options = {
