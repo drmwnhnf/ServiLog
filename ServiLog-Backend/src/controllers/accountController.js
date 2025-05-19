@@ -137,3 +137,16 @@ exports.verifyAccount = async (req, res) => {
         baseResponse(res, false, 500, error.message || "Server error", error);
     }
 };
+
+exports.getAccountbyId = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const account = await accountRepository.getAccountbyId(id);
+        if (!account) {
+            return baseResponse(res, false, 404, "Account not found", null);
+        }
+        baseResponse(res, true, 200, "Account found", account);
+    } catch (error) {
+        baseResponse(res, false, 500, error.message || "Server error", error);
+    }
+};
