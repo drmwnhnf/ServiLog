@@ -31,8 +31,6 @@ exports.createMileage = async (req, res) => {
 
         if (currentMileages.length != 0) {
             for (const m of currentMileages) {
-                console.log(m.date);
-                console.log(mileageCreated.date);
                 if (m.date.getTime() == mileageCreated.date.getTime()) {
                     await mileageRepository.deleteMileage(mileageCreated.id);
                     return baseResponse(res, false, 400, "Mileage data for the date is already stored", null);

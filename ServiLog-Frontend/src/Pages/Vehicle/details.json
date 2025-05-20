@@ -1,0 +1,205 @@
+{
+  "brands": [
+    {
+      "name": "Toyota",
+      "logo": "/assets/logos/Toyota.png",
+      "models": [
+        "Avanza",
+        "Innova",
+        "Corolla",
+        "Camry",
+        "Fortuner",
+        "Rush",
+        "Yaris",
+        "Vios",
+        "Alphard",
+        "Agya",
+        "Calya",
+        "Kijang"
+      ]
+    },
+    {
+      "name": "Honda",
+      "logo": "/assets/logos/Honda.png",
+      "models": [
+        "Brio",
+        "Jazz",
+        "Civic",
+        "Accord",
+        "CR-V",
+        "HR-V",
+        "BR-V",
+        "City",
+        "Mobilio",
+        "Odyssey"
+      ]
+    },
+    {
+      "name": "Suzuki",
+      "logo": "/assets/logos/Suzuki.png",
+      "models": [
+        "Swift",
+        "Ertiga",
+        "Ignis",
+        "Baleno",
+        "Jimny",
+        "XL7",
+        "Carry",
+        "APV",
+        "SX4",
+        "Karimun"
+      ]
+    },
+    {
+      "name": "Daihatsu",
+      "logo": "/assets/logos/Daihatsu.png",
+      "models": [
+        "Ayla",
+        "Terios",
+        "Xenia",
+        "Sirion",
+        "Gran Max",
+        "Luxio",
+        "Sigra",
+        "Rocky"
+      ]
+    },
+    {
+      "name": "Mitsubishi",
+      "logo": "/assets/logos/Mitsubishi.png",
+      "models": [
+        "Xpander",
+        "Pajero",
+        "Outlander",
+        "Eclipse Cross",
+        "Triton",
+        "Mirage",
+        "Delica"
+      ]
+    },
+    {
+      "name": "Nissan",
+      "logo": "/assets/logos/Nissan.png",
+      "models": [
+        "Livina",
+        "X-Trail",
+        "Terra",
+        "Serena",
+        "Juke",
+        "Kicks",
+        "March",
+        "Navara"
+      ]
+    },
+    {
+      "name": "Mazda",
+      "logo": "/assets/logos/Mazda.png",
+      "models": [
+        "CX-3",
+        "CX-5",
+        "CX-8",
+        "CX-9",
+        "Mazda2",
+        "Mazda3",
+        "Mazda6",
+        "MX-5"
+      ]
+    },
+    {
+      "name": "Ford",
+      "logo": "/assets/logos/Ford.png",
+      "models": [
+        "Ranger",
+        "Everest",
+        "Fiesta",
+        "EcoSport",
+        "Focus",
+        "Mustang",
+        "Territory"
+      ]
+    },
+    {
+      "name": "Hyundai",
+      "logo": "/assets/logos/Hyundai.png",
+      "models": [
+        "Santa Fe",
+        "Tucson",
+        "i20",
+        "Kona",
+        "Ioniq",
+        "Palisade",
+        "Creta",
+        "Stargazer"
+      ]
+    },
+    {
+      "name": "Kia",
+      "logo": "/assets/logos/Kia.png",
+      "models": [
+        "Seltos",
+        "Sonet",
+        "Carnival",
+        "Sportage",
+        "Rio",
+        "Sorento",
+        "Carens"
+      ]
+    },
+    {
+      "name": "Wuling",
+      "logo": "/assets/logos/Wuling.png",
+      "models": ["Almaz", "Confero", "Cortez", "Air ev", "Formo", "Macaron"]
+    },
+    {
+      "name": "BMW",
+      "logo": "/assets/logos/bmw.png",
+      "models": [
+        "X1",
+        "X3",
+        "X5",
+        "X7",
+        "3 Series",
+        "5 Series",
+        "7 Series",
+        "i4",
+        "i7",
+        "iX"
+      ]
+    },
+    {
+      "name": "Mercedes-Benz",
+      "logo": "/assets/logos/Mercy.png",
+      "models": [
+        "A-Class",
+        "C-Class",
+        "E-Class",
+        "S-Class",
+        "GLA",
+        "GLC",
+        "GLE",
+        "GLS",
+        "EQS",
+        "EQA"
+      ]
+    },
+    {
+      "name": "Audi",
+      "logo": "/assets/logos/Audi.png",
+      "models": ["A3", "A4", "A6", "Q3", "Q5", "Q7", "e-tron", "TT", "R8"]
+    },
+    {
+      "name": "Volkswagen",
+      "logo": "/assets/logos/Volkswagen.png",
+      "models": [
+        "Tiguan",
+        "Golf",
+        "Polo",
+        "Jetta",
+        "Beetle",
+        "Touareg",
+        "T-Cross",
+        "ID.4"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 const express = require('express');
 const vehicleController = require('../controllers/vehicleController');
-const authenticator = require('../middlewares/Authenticator');
+const authenticator = require('../middlewares/authenticator');
 const router = express.Router();
 
 router.get('/id/:id', authenticator, vehicleController.getVehiclebyId);

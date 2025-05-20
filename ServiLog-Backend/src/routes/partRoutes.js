@@ -1,6 +1,6 @@
 const express = require('express');
 const partController = require('../controllers/partController');
-const authenticator = require('../middlewares/Authenticator');
+const authenticator = require('../middlewares/authenticator');
 const router = express.Router();
 
 router.get('/id/:id', authenticator, partController.getPartbyId);
