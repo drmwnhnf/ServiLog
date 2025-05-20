@@ -17,12 +17,9 @@ const CreateVehicle = () => {
   const [models, setModels] = useState([]);
   const navigate = useNavigate();
 
-  // Get user ID from local storage
   const owner_id = localStorage.getItem("userId") || "";
-  // Get token from local storage
   const token = localStorage.getItem("token") || "";
 
-  // Set API base URL from environment variable
   const API_URL = "https://servilog-backend.vercel.app/vehicle";
 
   useEffect(() => {

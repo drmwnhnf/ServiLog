@@ -12,7 +12,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-// Import brands data
 import brandsData from "./details.json";
 
 // Register Chart.js components

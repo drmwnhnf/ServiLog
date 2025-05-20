@@ -9,7 +9,6 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is logged in using token in localStorage
     const token = localStorage.getItem("token");
     const storedUserName = localStorage.getItem("userName") || "User";
     setIsLoggedIn(!!token);
@@ -199,7 +198,7 @@ const Navbar = () => {
                 <span className="text-gray-800 font-medium">{userName}</span>
               </div>
               <Link
-                to="/profile"
+                to="/account"
                 className="block px-4 py-2 text-base font-medium text-gray-700 hover:text-[#D52B1E] hover:bg-gray-50"
               >
                 Profile

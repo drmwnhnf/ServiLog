@@ -24,17 +24,14 @@ export default function Login() {
         password,
       });
 
-      console.log("Login response:", response.data); // For debugging
+      console.log("Login response:", response.data);
 
       if (response.data.success) {
-        // Store token and user info in localStorage
-        // The structure should match what the backend sends
         localStorage.setItem("token", response.data.payload.token);
-        console.log("Token:", response.data.payload.token); // For debugging
+        console.log("Token:", response.data.payload.token);
         localStorage.setItem("userId", response.data.payload.account.id);
         localStorage.setItem("userName", response.data.payload.account.name);
 
-        // Redirect to dashboard after successful login
         navigate("/dashboard");
       } else {
         setError(response.data.message || "Login failed. Please try again.");
@@ -43,14 +40,12 @@ export default function Login() {
       console.error("Login error:", error);
 
       if (error.response?.data?.message === "Account isn't verified") {
-        // If the account isn't verified, set unverifiedAccount with the ID
         if (error.response?.data?.accountId) {
           setUnverifiedAccount(error.response.data.accountId);
           setError(
             "Your account is not verified. Please verify your account to continue."
           );
         } else {
-          // If no account ID is provided, we'll use the email instead
           setUnverifiedAccount(email);
           setError(
             "Your account is not verified. Please verify your account to continue."
@@ -86,7 +81,6 @@ export default function Login() {
         </div>
 
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Colored header strip */}
           <div className="h-2 bg-gradient-to-r from-[#D52B1E] to-[#FECB00]"></div>
 
           <div className="p-8">

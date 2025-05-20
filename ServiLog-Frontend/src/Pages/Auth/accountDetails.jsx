@@ -9,8 +9,7 @@ export default function AccountDetails() {
   const [error, setError] = useState(null);
 
   const token = localStorage.getItem("token");
-  // const API_URL = "https://servilog-backend.vercel.app";
-  const API_URL = "http://localhost:3000";
+  const API_URL = "https://servilog-backend.vercel.app";
 
   useEffect(() => {
     if (!token) {

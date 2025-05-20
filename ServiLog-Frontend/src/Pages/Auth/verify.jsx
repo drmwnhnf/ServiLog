@@ -116,7 +116,6 @@ const VerifyAccount = () => {
     <div className="flex items-center justify-center min-h-[calc(100vh-80px)] bg-gray-50 px-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Decorative header */}
           <div className="h-3 bg-gradient-to-r from-[#D52B1E] to-[#FECB00]"></div>
 
           <div className="p-8">

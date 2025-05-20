@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-// Import the brands data
 import brandsData from "./Vehicle/details.json";
 
 const VehicleList = () => {
@@ -12,7 +11,6 @@ const VehicleList = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
 
-  // Get user ID and token from local storage
   const accountId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
   const API_URL = "https://servilog-backend.vercel.app";

@@ -22,7 +22,6 @@ export default function Register() {
     setError("");
     setSuccessMessage("");
 
-    // Client-side validations
     if (!name || !email || !password) {
       setError("All fields are required");
       return;
@@ -50,14 +49,12 @@ export default function Register() {
       });
 
       if (response.data.success) {
-        // Get the account ID from the response
         const accountId = response.data.data?.id;
 
         setSuccessMessage(
           "Registration successful! Redirecting to verification page..."
         );
 
-        // Redirect to verify page with the account ID
         setTimeout(() => {
           navigate(`/verify/${accountId}`);
         }, 2000);
@@ -90,7 +87,6 @@ export default function Register() {
     <div className="flex items-center justify-center min-h-[calc(100vh-80px)] bg-gray-50 px-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Colored header strip */}
           <div className="h-2 bg-gradient-to-r from-[#D52B1E] to-[#FECB00]"></div>
 
           <div className="p-8">
