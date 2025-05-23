@@ -102,7 +102,8 @@ exports.maintainPart = async (req, res) => {
 
     try {
         const part = await partRepository.updatePartStatus(id, 'MAINTAINED/REPLACED');
-        if (!!part) {
+        const isChecked = await checkPartStatus(part.id, part.vehicle_id);
+        if (!!part && isChecked) {
             return baseResponse(res, true, 200, "Part maintained", part);
         } else {
             return baseResponse(res, false, 404, "Part not found", null);
