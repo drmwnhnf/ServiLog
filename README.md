@@ -6,7 +6,154 @@ Proyek kami sudah di-deploy menggunakan Vercel yang dapat diakses di https://ser
 
 ---
 
-## ServiLog-Backend
+## Skenario Aplikasi dan Database
+
+### UML Diagram
+
+```Mermaid
+
+classDiagram
+    class AccountController {
+        +register(req, res)
+        +login(req, res)
+        +verify(req, res)
+        +getAccount(req, res)
+        +updateAccount(req, res)
+        +deleteAccount(req, res)
+    }
+    class VehicleController {
+        +getVehiclesByAccount(req, res)
+        +getVehicleById(req, res)
+        +createVehicle(req, res)
+        +updateVehicle(req, res)
+        +deleteVehicle(req, res)
+    }
+    class PartController {
+        +getPartsByVehicle(req, res)
+        +createPart(req, res)
+        +updatePart(req, res)
+        +deletePart(req, res)
+        +maintainPart(req, res)
+    }
+    class MileageController {
+        +getMileagesByVehicle(req, res)
+        +createMileage(req, res)
+        +updateMileage(req, res)
+        +deleteMileage(req, res)
+    }
+    class AuthMiddleware {
+        +authenticate(req, res, next)
+    }
+    class AccountRepository {
+        +findByEmail(email)
+        +findById(id)
+        +create(data)
+        +update(id, data)
+        +delete(id)
+    }
+    class VehicleRepository {
+        +findByAccountId(accountId)
+        +findById(id)
+        +create(data)
+        +update(id, data)
+        +delete(id)
+    }
+    class PartRepository {
+        +findByVehicleId(vehicleId)
+        +findById(id)
+        +create(data)
+        +update(id, data)
+        +delete(id)
+        +maintain(id)
+    }
+    class MileageRepository {
+        +findByVehicleId(vehicleId)
+        +findById(id)
+        +create(data)
+        +update(id, data)
+        +delete(id)
+    }
+    class MailService {
+        +sendVerification(email, token)
+    }
+    class Utils {
+        +hashPassword(password)
+        +comparePassword(password, hash)
+        +generateToken(payload)
+        +verifyToken(token)
+        +formatResponse(data, message)
+    }
+
+    AccountController --> AccountRepository
+    AccountController --> MailService
+    AccountController --> Utils
+    VehicleController --> VehicleRepository
+    VehicleController --> Utils
+    PartController --> PartRepository
+    PartController --> Utils
+    MileageController --> MileageRepository
+    MileageController --> Utils
+    AuthMiddleware --> Utils
+
+```
+
+### ER Diagram
+
+```Mermaid
+
+erDiagram
+    accounts {
+        UUID id PK
+        VARCHAR name
+        VARCHAR email
+        VARCHAR password
+        BOOLEAN is_verified
+        TIMESTAMP created_at
+    }
+
+    vehicles {
+        UUID id PK
+        UUID owner_id FK
+        VARCHAR name
+        VARCHAR brand
+        VARCHAR model
+        INT year
+        ENUM status
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
+
+    parts {
+        UUID id PK
+        UUID vehicle_id FK
+        VARCHAR name
+        VARCHAR brand
+        VARCHAR model
+        INT year
+        ENUM status
+        INT install_mileage
+        INT lifetime_mileage
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
+
+    mileages {
+        UUID id PK
+        UUID vehicle_id FK
+        INT mileage
+        DATE date
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
+
+    accounts ||--o{ vehicles : "owns"
+    vehicles ||--o{ parts : "has"
+    vehicles ||--o{ mileages : "records"
+
+
+```
+
+## Backend
 
 ### Stack Backend
 - **Node.js** + **Express.js**
@@ -70,7 +217,7 @@ Proyek kami sudah di-deploy menggunakan Vercel yang dapat diakses di https://ser
 
 ---
 
-## ServiLog-Frontend
+## Frontend
 
 ### Stack Frontend
 - **React.js** (Vite)
