@@ -10,7 +10,7 @@ Proyek kami sudah di-deploy menggunakan Vercel yang dapat diakses di https://ser
 
 ### UML Diagram
 
-```Mermaid
+```mermaid
 
 classDiagram
     class AccountController {
@@ -99,7 +99,7 @@ classDiagram
 
 ### ER Diagram
 
-```Mermaid
+```mermaid
 
 erDiagram
     accounts {
